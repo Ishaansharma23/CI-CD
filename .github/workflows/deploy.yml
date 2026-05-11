@@ -1,0 +1,61 @@
+# Workflow ka naam
+name: Deploy Next.js App
+
+# Kab run hoga
+on:
+  push:
+    branches:
+      - main   # sirf main branch pe push hone par
+
+# Jobs/tasks
+jobs:
+
+  # Deploy job
+  deploy:
+
+    # GitHub Ubuntu Linux VM use karega
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # STEP 1 😭
+      # Repo ka code VM me lao
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # STEP 2 😭🔥
+      # EC2 server me SSH karo
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.2.0
+
+        with:
+
+          # EC2 public IP
+          host: YOUR_EC2_IP
+
+          # Ubuntu username
+          username: ubuntu
+
+          # GitHub secret me stored private key
+          key: ${{ secrets.PRIVATE_SSH_KEY }}
+
+          # SSH port
+          port: 22
+
+          # EC2 ke andar chalne wali commands 😭
+          script: |
+
+            # Project folder me jao
+            cd /home/ubuntu/your-project
+
+            # Latest GitHub code lao
+            git pull origin main
+
+            # Packages install/update
+            npm install
+
+            # Next.js production build
+            npm run build
+
+            # PM2 app restart
+            pm2 restart app
