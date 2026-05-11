@@ -1,0 +1,351 @@
+========================
+CI/CD + GitHub Actions Notes
+========================
+
+1. What is CI/CD?
+-------------------
+CI/CD stands for:
+- CI = Continuous Integration
+- CD = Continuous Deployment
+
+CI:
+Code push hote hi automatic checks/tests/build run karna.
+
+CD:
+Code automatically server pe deploy karna.
+
+--------------------------------------------------
+
+2. What is GitHub Actions?
+---------------------------
+GitHub ka automation tool.
+
+Kaam:
+- code test
+- build
+- deploy
+- lint
+- automation tasks
+
+Automatically run karta after events like:
+- push
+- pull request
+
+--------------------------------------------------
+
+3. Workflow File
+-----------------
+Path:
+.github/workflows/test.yml
+
+YAML file hoti hai jisme automation steps likhte hain.
+
+--------------------------------------------------
+
+4. runs-on: ubuntu-latest
+--------------------------
+GitHub temporary Ubuntu Linux machine start karta.
+
+Us machine pe workflow commands run hoti hain.
+
+--------------------------------------------------
+
+5. actions/checkout@v4
+-----------------------
+Repo ka code GitHub VM me laata.
+
+Similar to:
+git clone
+
+--------------------------------------------------
+
+6. Example Workflow
+--------------------
+
+name: Deploy App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install packages
+        run: npm install
+
+      - name: Build app
+        run: npm run build
+
+--------------------------------------------------
+
+7. Workflow Flow
+-----------------
+
+git push
+↓
+GitHub Actions trigger
+↓
+Ubuntu VM start
+↓
+Repo clone
+↓
+Commands run
+↓
+Success / Fail
+
+--------------------------------------------------
+
+8. What is SSH?
+----------------
+SSH = Secure Shell
+
+Remote server login protocol.
+
+Example:
+ssh -i key.pem ubuntu@ip-address
+
+--------------------------------------------------
+
+9. What is EC2?
+----------------
+AWS cloud virtual machine/server.
+
+Used for:
+- hosting websites
+- backend deployment
+- databases
+
+--------------------------------------------------
+
+10. What is PM2?
+-----------------
+Node.js process manager.
+
+Kaam:
+- app background me chalana
+- auto restart
+- crash recovery
+
+Commands:
+pm2 start app.js
+pm2 restart app
+
+--------------------------------------------------
+
+11. What is Nginx?
+-------------------
+Web server + reverse proxy.
+
+Kaam:
+- HTTPS
+- routing
+- load balancing
+- reverse proxy
+
+Flow:
+User → Nginx → Node App
+
+--------------------------------------------------
+
+12. What is ngrok?
+-------------------
+Tool that makes localhost public temporarily.
+
+Example:
+localhost:3000
+↓
+https://abc.ngrok.app
+
+Used for:
+- webhook testing
+- local project sharing
+- mobile testing
+
+Command:
+ngrok http 3000
+
+--------------------------------------------------
+
+13. ngrok Important Points
+---------------------------
+- temporary URL
+- works till ngrok running
+- terminal close → URL dead
+- not permanent deployment
+
+--------------------------------------------------
+
+14. Deploy.sh
+--------------
+Shell script for deployment automation.
+
+Example:
+#!/bin/bash
+
+git pull origin main
+npm install
+npm run build
+pm2 restart app
+
+Run:
+./deploy.sh
+
+--------------------------------------------------
+
+
+16. GitHub Deployment Flow
+---------------------------
+
+git push
+↓
+GitHub Actions
+↓
+SSH into EC2
+↓
+git pull
+↓
+npm install
+↓
+npm run build
+↓
+pm2 restart
+
+--------------------------------------------------
+
+17. Why CI/CD?
+----------------
+- automation
+- fast deployment
+- less manual work
+- fewer mistakes
+- professional workflow
+
+--------------------------------------------------
+
+18. Linux Basic Commands
+-------------------------
+
+ls
+Show files
+
+ls -a
+Show hidden files
+
+cd folder
+Change directory
+
+pwd
+Current path
+
+mkdir folder
+Create folder
+
+touch file.txt
+Create file
+
+cat file.txt
+Read file
+
+rm -rf folder
+Delete folder
+
+chmod +x file.sh
+Give execute permission
+
+--------------------------------------------------
+
+19. What is chmod?
+-------------------
+Change file permissions.
+
+Example:
+chmod 400 key.pem
+
+400:
+Owner can only read.
+
+--------------------------------------------------
+
+20. Node.js Installation via NVM
+---------------------------------
+
+Install NVM:
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+
+Reload:
+source ~/.zshrc
+
+Install Node:
+nvm install 22
+
+Use version:
+nvm use 22
+
+--------------------------------------------------
+
+21. Difference: npm vs pnpm
+----------------------------
+
+npm run dev
+Formal npm syntax.
+
+pnpm dev
+Shortcut syntax.
+
+Both run package.json scripts.
+
+--------------------------------------------------
+
+22. Difference: ngrok vs Nginx
+-------------------------------
+
+ngrok:
+Temporary localhost tunnel.
+
+Nginx:
+Production web server/reverse proxy.
+
+--------------------------------------------------
+
+23. What is Kernel?
+--------------------
+Core part of Operating System.
+
+Handles:
+- CPU
+- RAM
+- files
+- hardware
+- processes
+
+Apps → Kernel → Hardware
+
+--------------------------------------------------
+
+24. What is Unix-based?
+------------------------
+System follows Unix design principles.
+
+Examples:
+- macOS
+- Linux
+- Ubuntu
+
+--------------------------------------------------
+
+25. CI vs CD
+-------------
+CI:
+Testing/build integration.
+
+CD:
+Automatic deployment.
+
+==================================================
