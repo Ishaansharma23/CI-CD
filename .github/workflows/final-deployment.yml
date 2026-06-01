@@ -1,0 +1,49 @@
+# Workflow Name
+name: Continuous Deployment (Prod) (Backend)
+
+# Kab workflow chalega?
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  # Job Name (kuch bhi rakh sakte ho)
+  build:
+
+    # GitHub temporary Ubuntu machine dega
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # Step 1: Repository ka code download/checkout/clone karo in ubuntu machine provided by github
+      - uses: actions/checkout@v2
+
+      # Step 2: Docker Hub me login karo
+      - name: Docker Login
+
+        uses: docker/login-action@v2
+
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Step 3: Docker Image Build karo aur Docker Hub par push karo
+      - name: Build and Push
+
+        uses: docker/build-push-action@v4
+
+        with:
+
+          # Build context
+          context: .
+
+          # Dockerfile location
+          file: ./docker/Dockerfile.backend
+
+          # Docker Hub par push karna hai
+          push: true
+
+          # Image tag
+          tags: 100xdevs/user-app-backend:${{ github.sha }}
