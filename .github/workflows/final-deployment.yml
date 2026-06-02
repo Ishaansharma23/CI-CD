@@ -47,3 +47,19 @@ jobs:
 
           # Image tag
           tags: 100xdevs/user-app-backend:${{ github.sha }}
+
+          # steps to deploy to VM
+          name: deploy to VM
+          run: |
+            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
+            chmod 600 ~/ssh_key
+
+            ssh -o StrictHostKeyChecking=no -i ~/ssh_key root@64.227.169.180 -t "
+            docker stop user-app-backend || true &&
+            docker rm user-app-backend || true &&
+            docker pull 100xdevs/user-app-backend:${{ github.sha }} &&
+            docker run -d \
+              --name user-app-backend \
+              -p 8080:8080 \
+              100xdevs/user-app-backend:${{ github.sha }}
+          "
