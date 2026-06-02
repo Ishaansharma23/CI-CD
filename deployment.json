@@ -1,0 +1,42 @@
+{
+  "name": "Continuous Deployment (Prod) (Backend)",
+  "on": {
+    "push": {
+      "branches": [
+        "main"
+      ]
+    }
+  },
+  "jobs": {
+    "build": {
+      "runs-on": "ubuntu-latest",
+      "steps": [
+        {
+          "uses": "actions/checkout@v2"
+        },
+        {
+          "name": "Docker Login",
+          "uses": "docker/login-action@v2",
+          "with": {
+            "username": "${{ secrets.DOCKERHUB_USERNAME }}",
+            "password": "${{ secrets.DOCKERHUB_TOKEN }}"
+          }
+        },
+        {
+          "name": "Build and Push",
+          "uses": "docker/build-push-action@v4",
+          "with": {
+            "context": ".",
+            "file": "./docker/Dockerfile.backend",
+            "push": true,
+            "tags": "100xdevs/user-app-backend:${{ github.sha }}"
+          }
+        },
+        {
+          "name": "deploy to VM",
+          "run": "echo \"${{ secrets.SSH_PRIVATE_KEY }}\" > ~/ssh_key\nchmod 600 ~/ssh_key\n\nssh -o StrictHostKeyChecking=no -i ~/ssh_key root@64.227.169.180 -t \"\n  docker stop user-app-backend || true &&\n  docker rm user-app-backend || true &&\n  docker pull 100xdevs/user-app-backend:${{ github.sha }} &&\n  docker run -d \\\n    --name user-app-backend \\\n    -p 8080:8080 \\\n    100xdevs/user-app-backend:${{ github.sha }}\n\"\n"
+        }
+      ]
+    }
+  }
+}
